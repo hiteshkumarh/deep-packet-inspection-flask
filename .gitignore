@@ -1,0 +1,43 @@
+# DPI Engine Project ignored files
+
+# Compiled C++ Objects and Executables
+*.o
+*.out
+*.exe
+*.dll
+*.so
+*.dylib
+build/
+install/
+out/
+.vs/
+
+# PCAP Packet Captures (large data)
+*.pcap
+!test_dpi.pcap
+*.cap
+*.dmp
+backend/uploads/
+output_*.pcap
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+.env
+
+# IDEs & OS specific
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Project specific logs and generic outputs
+*.log
+debug_out.txt
+fixed_out.txt

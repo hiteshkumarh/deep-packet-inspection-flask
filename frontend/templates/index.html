@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Packet Inspection Engine</title>
+    <!-- Modern Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+
+    <div class="layout">
+        <header class="glass-panel main-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                </div>
+                <h1>DPI <span class="accent">Analyzer</span></h1>
+            </div>
+            <nav>
+                <a href="#" class="active">Dashboard</a>
+                <a href="#">Rules</a>
+                <a href="#">Settings</a>
+            </nav>
+        </header>
+
+        <main class="dashboard">
+            <section class="upload-section">
+                <div class="glass-panel dropzone" id="dropzone">
+                    <input type="file" id="fileInput" accept=".pcap" class="hidden">
+                    <div class="upload-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                    </div>
+                    <h3>Upload PCAP File</h3>
+                    <p>Drag and drop your packet capture file here, or <span class="browse-link">browse</span></p>
+                    <div class="supported-formats">Supported format: .pcap</div>
+                </div>
+
+                <div class="rules-input-container glass-panel" style="margin-top: 1rem; padding: 1.5rem;">
+                    <label for="rulesInput"
+                        style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 500;">Applications/Domains to Block (Optional)</label>
+                    <input type="text" id="rulesInput" class="rules-input"
+                        placeholder="e.g. youtube, facebook, github">
+                </div>
+
+                <div class="glass-panel" id="loadingState" style="display: none;">
+                    <div class="loader-container">
+                        <div class="pulse-ring"></div>
+                        <div class="pulse-dot"></div>
+                    </div>
+                    <div class="loading-text">Analyzing Packets...</div>
+                    <div class="loading-subtext">Running Deep Packet Inspection</div>
+                </div>
+            </section>
+
+            <section class="results-section glass-panel" id="resultsPanel" style="display: none;">
+                <h2>Analysis Results</h2>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon total">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                                </path>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                            </svg>
+                        </div>
+                        <div class="metric-info">
+                            <div class="metric-value" id="totalPackets">0</div>
+                            <div class="metric-label">Total Packets</div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon forwarded">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                        <div class="metric-info">
+                            <div class="metric-value" id="forwardedPackets">0</div>
+                            <div class="metric-label">Forwarded</div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon dropped">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </div>
+                        <div class="metric-info">
+                            <div class="metric-value" id="droppedPackets">0</div>
+                            <div class="metric-label">Dropped</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="terminal-container glass-panel">
+                    <div class="terminal-header">
+                        <div class="terminal-dots">
+                            <span class="dot close"></span>
+                            <span class="dot minimize"></span>
+                            <span class="dot expand"></span>
+                        </div>
+                        <div class="terminal-title">DPI Engine Output</div>
+                    </div>
+                    <pre id="rawOutput" class="terminal-output"></pre>
+                </div>
+
+                <div class="actions-row">
+                    <button class="btn btn-primary" id="resetBtn">Analyze Another File</button>
+                    <a href="#" class="btn" id="downloadBtn" style="display: none; background: var(--bg-hover); color: var(--text-primary); text-decoration: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 500;">Download Filtered PCAP</a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+
+</html>
