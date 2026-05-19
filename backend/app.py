@@ -54,10 +54,12 @@ def create_app():
 
     return app
 
+app = create_app()
+
 if __name__ == '__main__':
-    app = create_app()
+    port = int(os.environ.get("PORT", 5000))
     # Run the server on port 5000
     # use_reloader=False is crucial here because writing PCAP files
     # to the uploads/ directory triggers Werkzeug's file watcher,
     # causing the server to restart mid-request and dropping the connection.
-    app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=False)
+    app.run(host='0.0.0.0', port=port, debug=False, use_reloader=False)

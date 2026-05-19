@@ -24,4 +24,4 @@ EXPOSE 5000
 WORKDIR /app/backend
 
 # Command to run the Flask application
-CMD ["python", "app.py"]
+CMD gunicorn app:app --bind 0.0.0.0:${PORT:-5000}
